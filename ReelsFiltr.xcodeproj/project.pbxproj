@@ -10,6 +10,9 @@
 		A00100000000000000000004 /* filter.js in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000005 /* filter.js */; };
 		A00100000000000000000005 /* filter.css in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000006 /* filter.css */; };
 		A00100000000000000000006 /* ReelsFiltrExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A00200000000000000000008 /* ReelsFiltrExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A00100000000000000000007 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000009 /* popup.html */; };
+		A00100000000000000000008 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = A0020000000000000000000A /* popup.js */; };
+		A00100000000000000000009 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = A0020000000000000000000B /* popup.css */; };
 
 		A00200000000000000000001 /* ReelsFiltrApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReelsFiltrApp.swift; sourceTree = "<group>"; };
 		A00200000000000000000002 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
@@ -19,6 +22,9 @@
 		A00200000000000000000006 /* filter.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = filter.css; sourceTree = "<group>"; };
 		A00200000000000000000007 /* ReelsFiltr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReelsFiltr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00200000000000000000008 /* ReelsFiltrExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReelsFiltrExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00200000000000000000009 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
+		A0020000000000000000000A /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = popup.js; sourceTree = "<group>"; };
+		A0020000000000000000000B /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = popup.css; sourceTree = "<group>"; };
 
 		A00300000000000000000001 = {
 			isa = PBXGroup;
@@ -39,7 +45,7 @@
 		};
 		A00300000000000000000004 /* Resources */ = {
 			isa = PBXGroup;
-			children = (A00200000000000000000004 /* manifest.json */, A00200000000000000000005 /* filter.js */, A00200000000000000000006 /* filter.css */, );
+			children = (A00200000000000000000004 /* manifest.json */, A00200000000000000000005 /* filter.js */, A00200000000000000000006 /* filter.css */, A00200000000000000000009 /* popup.html */, A0020000000000000000000A /* popup.js */, A0020000000000000000000B /* popup.css */, );
 			path = Resources;
 			sourceTree = "<group>";
 		};
@@ -52,7 +58,7 @@
 
 		A00400000000000000000001 /* App Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000001, ); runOnlyForDeploymentPostprocessing = 0; };
 		A00400000000000000000002 /* Extension Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000002, ); runOnlyForDeploymentPostprocessing = 0; };
-		A00400000000000000000003 /* Extension Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, ); runOnlyForDeploymentPostprocessing = 0; };
+		A00400000000000000000003 /* Extension Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, A00100000000000000000007, A00100000000000000000008, A00100000000000000000009, ); runOnlyForDeploymentPostprocessing = 0; };
 		A00400000000000000000004 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -99,9 +105,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -114,9 +120,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;

@@ -27,6 +27,7 @@ struct ReelsFiltrApp: App {
 
                         Text("V Nastavení vyhledej Safari, otevři Rozšíření a zapni Reels filtr.")
                         Text("V Safari otevři instagram.com a dovol rozšíření přístup k tomuto webu.")
+                        Text("V nabídce stránky v Safari otevři Reels filtr. Přepínačem Skrývat Reels můžeš filtr kdykoli zapnout nebo vypnout.")
                     }
                 }
                 .frame(maxWidth: 480, alignment: .leading)

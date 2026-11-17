@@ -2,7 +2,12 @@
   "manifest_version": 3,
   "name": "Reels filtr",
   "description": "Skryje odkazy na Reels ve webovém Instagramu.",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "permissions": ["storage"],
+  "action": {
+    "default_title": "Reels filtr",
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.instagram.com/*", "https://instagram.com/*"],

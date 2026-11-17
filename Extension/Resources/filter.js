@@ -6,7 +6,13 @@
   const postPath = /^\/(?:p|reel)\/[^/]+\/?$/i;
   const articleSelector = 'article, [role="article"]';
   const hiddenAttribute = "data-reels-filter-hidden";
+  const redirectingAttribute = "data-reels-filter-redirecting";
   const linkSelector = `a[href], a[${hiddenAttribute}]`;
+  const storage = (globalThis.browser ?? globalThis.chrome).storage;
+  let enabled;
+  let redirectingFrom;
+  let routeTimer;
+  let settingsRevision = 0;
 
   function instagramPath(href) {
     try {
@@ -20,19 +26,21 @@
     return "";
   }
 
-  let redirecting = false;
-
   function redirectReelPage() {
-    if (!redirecting && reelPath.test(instagramPath(location.href))) {
-      redirecting = true;
+    const blocked = Boolean(enabled && reelPath.test(instagramPath(location.href)));
+    document.documentElement?.toggleAttribute(redirectingAttribute, blocked);
+
+    if (blocked && redirectingFrom !== location.href) {
+      redirectingFrom = location.href;
+      for (const video of document.querySelectorAll("video")) video.pause();
       location.replace(new URL("/", location.origin));
     }
-    return redirecting;
+    if (!blocked) redirectingFrom = undefined;
+    return blocked;
   }
 
-  if (redirectReelPage()) return;
-
   function blockReelLink(event) {
+    if (!enabled) return;
     const link = event.target?.closest?.("a[href]");
     if (link && reelPath.test(instagramPath(link.getAttribute("href")))) {
       event.preventDefault();
@@ -40,9 +48,16 @@
     }
   }
 
+  function setHidden(element, hidden) {
+    element.toggleAttribute(hiddenAttribute, hidden);
+    if (hidden) {
+      for (const video of element.querySelectorAll("video")) video.pause();
+    }
+  }
+
   function updateLink(link) {
     const href = link.getAttribute("href");
-    link.toggleAttribute(hiddenAttribute, href !== null && reelPath.test(instagramPath(href)));
+    setHidden(link, href !== null && reelPath.test(instagramPath(href)));
   }
 
   function updateArticle(article) {
@@ -52,7 +67,7 @@
       if (timestamp.closest(articleSelector) !== article) continue;
       const path = instagramPath(timestamp.closest("a").getAttribute("href"));
       if (postPath.test(path)) {
-        article.toggleAttribute(hiddenAttribute, reelPath.test(path));
+        setHidden(article, reelPath.test(path));
         return;
       }
     }
@@ -72,9 +87,16 @@
   window.addEventListener("popstate", redirectReelPage);
   window.addEventListener("pageshow", redirectReelPage);
   window.navigation?.addEventListener("currententrychange", redirectReelPage);
+  document.addEventListener("visibilitychange", redirectReelPage);
+  document.addEventListener("play", (event) => {
+    const video = event.target;
+    if (enabled && video.matches?.("video") && video.closest(`[${hiddenAttribute}]`)) {
+      video.pause();
+    }
+  }, true);
 
   const observer = new MutationObserver((changes) => {
-    if (redirectReelPage()) return;
+    if (!enabled || redirectReelPage()) return;
 
     const articles = new Set();
     for (const change of changes) {
@@ -93,11 +115,46 @@
     for (const article of articles) updateArticle(article);
   });
 
-  observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+  function applyEnabled(value) {
+    const nextEnabled = value !== false;
+    if (nextEnabled === enabled) return;
+    enabled = nextEnabled;
 
-  if (document.documentElement) {
+    observer.disconnect();
+    clearInterval(routeTimer);
+    if (!enabled) {
+      document.documentElement?.removeAttribute(redirectingAttribute);
+      redirectingFrom = undefined;
+      for (const element of document.querySelectorAll(`[${hiddenAttribute}]`)) {
+        element.removeAttribute(hiddenAttribute);
+      }
+      return;
+    }
+
+    observer.observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+    if (redirectReelPage()) return;
+
     const articles = new Set();
-    scanSubtree(document.documentElement, articles);
+    if (document.documentElement) scanSubtree(document.documentElement, articles);
     for (const article of articles) updateArticle(article);
+
+    // Safari versions without the Navigation API also need to catch pushState
+    // transitions that do not mutate the document or emit popstate.
+    routeTimer = setInterval(() => {
+      if (!document.hidden) redirectReelPage();
+    }, 400);
   }
+
+  storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "local" || !Object.hasOwn(changes, "enabled")) return;
+    settingsRevision += 1;
+    applyEnabled(changes.enabled.newValue);
+  });
+
+  const revisionAtRead = settingsRevision;
+  storage.local.get({ enabled: true }).then((settings) => {
+    if (settingsRevision === revisionAtRead) applyEnabled(settings.enabled);
+  }).catch(() => {
+    if (settingsRevision === revisionAtRead) applyEnabled(true);
+  });
 })();
