@@ -1,0 +1,196 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+		A00100000000000000000001 /* ReelsFiltrApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000001 /* ReelsFiltrApp.swift */; };
+		A00100000000000000000002 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000002 /* SafariWebExtensionHandler.swift */; };
+		A00100000000000000000003 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000004 /* manifest.json */; };
+		A00100000000000000000004 /* filter.js in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000005 /* filter.js */; };
+		A00100000000000000000005 /* filter.css in Resources */ = {isa = PBXBuildFile; fileRef = A00200000000000000000006 /* filter.css */; };
+		A00100000000000000000006 /* ReelsFiltrExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A00200000000000000000008 /* ReelsFiltrExtension.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+
+		A00200000000000000000001 /* ReelsFiltrApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReelsFiltrApp.swift; sourceTree = "<group>"; };
+		A00200000000000000000002 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		A00200000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A00200000000000000000004 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
+		A00200000000000000000005 /* filter.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = filter.js; sourceTree = "<group>"; };
+		A00200000000000000000006 /* filter.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = filter.css; sourceTree = "<group>"; };
+		A00200000000000000000007 /* ReelsFiltr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReelsFiltr.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00200000000000000000008 /* ReelsFiltrExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ReelsFiltrExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+
+		A00300000000000000000001 = {
+			isa = PBXGroup;
+			children = (A00300000000000000000002 /* App */, A00300000000000000000003 /* Extension */, A00300000000000000000005 /* Products */, );
+			sourceTree = "<group>";
+		};
+		A00300000000000000000002 /* App */ = {
+			isa = PBXGroup;
+			children = (A00200000000000000000001 /* ReelsFiltrApp.swift */, );
+			path = App;
+			sourceTree = "<group>";
+		};
+		A00300000000000000000003 /* Extension */ = {
+			isa = PBXGroup;
+			children = (A00200000000000000000002 /* SafariWebExtensionHandler.swift */, A00200000000000000000003 /* Info.plist */, A00300000000000000000004 /* Resources */, );
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		A00300000000000000000004 /* Resources */ = {
+			isa = PBXGroup;
+			children = (A00200000000000000000004 /* manifest.json */, A00200000000000000000005 /* filter.js */, A00200000000000000000006 /* filter.css */, );
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A00300000000000000000005 /* Products */ = {
+			isa = PBXGroup;
+			children = (A00200000000000000000007 /* ReelsFiltr.app */, A00200000000000000000008 /* ReelsFiltrExtension.appex */, );
+			name = Products;
+			sourceTree = "<group>";
+		};
+
+		A00400000000000000000001 /* App Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000001, ); runOnlyForDeploymentPostprocessing = 0; };
+		A00400000000000000000002 /* Extension Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000002, ); runOnlyForDeploymentPostprocessing = 0; };
+		A00400000000000000000003 /* Extension Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A00100000000000000000003, A00100000000000000000004, A00100000000000000000005, ); runOnlyForDeploymentPostprocessing = 0; };
+		A00400000000000000000004 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (A00100000000000000000006, );
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+
+		A00500000000000000000001 /* ReelsFiltr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00800000000000000000002;
+			buildPhases = (A00400000000000000000001, A00400000000000000000004, );
+			buildRules = ();
+			dependencies = (A00600000000000000000001, );
+			name = ReelsFiltr;
+			productName = ReelsFiltr;
+			productReference = A00200000000000000000007;
+			productType = "com.apple.product-type.application";
+		};
+		A00500000000000000000002 /* ReelsFiltrExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00800000000000000000003;
+			buildPhases = (A00400000000000000000002, A00400000000000000000003, );
+			buildRules = ();
+			dependencies = ();
+			name = ReelsFiltrExtension;
+			productName = ReelsFiltrExtension;
+			productReference = A00200000000000000000008;
+			productType = "com.apple.product-type.app-extension";
+		};
+
+		A00600000000000000000001 = {isa = PBXTargetDependency; target = A00500000000000000000002; targetProxy = A00600000000000000000002; };
+		A00600000000000000000002 = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00900000000000000000001;
+			proxyType = 1;
+			remoteGlobalIDString = A00500000000000000000002;
+			remoteInfo = ReelsFiltrExtension;
+		};
+
+		A00700000000000000000001 /* Project Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 0.1.0;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A00700000000000000000002 /* Project Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 0.1.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A00700000000000000000003 /* App Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reels filtr";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.numsik.reelsfiltr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A00700000000000000000004 /* App Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reels filtr";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.numsik.reelsfiltr;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		A00700000000000000000005 /* Extension Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@executable_path/../../Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.numsik.reelsfiltr.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		A00700000000000000000006 /* Extension Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = Extension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks", "@executable_path/../../Frameworks", );
+				PRODUCT_BUNDLE_IDENTIFIER = com.numsik.reelsfiltr.extension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+
+		A00800000000000000000001 = {isa = XCConfigurationList; buildConfigurations = (A00700000000000000000001, A00700000000000000000002, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		A00800000000000000000002 = {isa = XCConfigurationList; buildConfigurations = (A00700000000000000000003, A00700000000000000000004, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+		A00800000000000000000003 = {isa = XCConfigurationList; buildConfigurations = (A00700000000000000000005, A00700000000000000000006, ); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+
+		A00900000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {BuildIndependentTargetsInParallel = YES; LastUpgradeCheck = 1600; };
+			buildConfigurationList = A00800000000000000000001;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = cs;
+			hasScannedForEncodings = 0;
+			knownRegions = (cs, Base, );
+			mainGroup = A00300000000000000000001;
+			productRefGroup = A00300000000000000000005;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (A00500000000000000000001, A00500000000000000000002, );
+		};
+	};
+	rootObject = A00900000000000000000001;
+}
