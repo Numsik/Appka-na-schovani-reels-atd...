@@ -5,7 +5,7 @@ const { afterEach, test } = require("node:test");
 const vm = require("node:vm");
 const { JSDOM } = require("jsdom");
 
-const resources = join(__dirname, "../Extension/Resources");
+const resources = join(__dirname, "../legacy/safari/Extension/Resources");
 const filterSource = readFileSync(join(resources, "filter.js"), "utf8");
 const popupSource = readFileSync(join(resources, "popup.js"), "utf8");
 const popupHTML = readFileSync(join(resources, "popup.html"), "utf8");

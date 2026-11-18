@@ -1,33 +1,82 @@
-# Reels filtr pro iPhone
+# Reels filtr · React Native + Expo
 
-Reels filtr je aplikace pro iOS 16 a novější s rozšířením Safari. Ve webovém Instagramu skrývá odkazy na Reels v navigaci, profilech a mřížkách. Ve feedu skryje kartu, pokud její vlastní odkaz u časového údaje vede na Reel. Přímé adresy Reels vrací na domovskou stránku Instagramu. Běžné příspěvky a zprávy zůstávají dostupné. Oficiální aplikace Instagram běží odděleně od Safari.
+Aplikace pro iPhone v **React Native, TypeScriptu a Expo SDK 58**. Rozhraní ovládá vlastní lokální modul pro iOS. Prototyp pracuje s původním Instagramem z App Storu: při rozpoznání přehrávače Reels přes systémové vysílání obrazovky dočasně překryje vybranou aplikaci blokací Času u obrazovky.
 
-Rozšíření pracuje lokálně na stránkách `instagram.com` a `www.instagram.com`. Ukládá pouze volbu zapnutí filtru do místního úložiště rozšíření. Kód rozšíření žádná data neodesílá.
+**Záložku Reels neodstraňuje.** Po dobu blokace se pozastaví celý Instagram včetně zpráv. Rozpoznávání je experimentální, založené na OCR a rozmístění prvků v českém/anglickém rozhraní, nikoli na natrénovaném modelu. Funkčnost a přesnost v Instagramu na fyzickém iPhonu zatím nejsou ověřené.
 
-## Spuštění
+## Rychlé otevření rozhraní
 
-1. Otevři `ReelsFiltr.xcodeproj` v plném Xcode a vyber schéma **ReelsFiltr**.
-2. Vyber iOS simulátor nebo připojený iPhone. Pro iPhone nastav v **Signing & Capabilities** stejný tým pro `ReelsFiltr` i `ReelsFiltrExtension`. Pokud Xcode hlásí obsazený identifikátor, změň identifikátor aplikace i prefix identifikátoru rozšíření.
-3. Spusť aplikaci v Xcode. V Nastavení vyhledej Safari, otevři **Rozšíření** a zapni **Reels filtr**.
-4. V Safari ručně otevři `instagram.com` a povol rozšíření přístup k webu přes nabídku stránky.
+Použij Node.js 24 LTS (`nvm use`, pokud používáš nvm):
 
-## Ovládání filtru
+```sh
+npm ci
+npm start
+```
 
-V nabídce stránky v Safari otevři **Reels filtr**. Přepínač **Skrývat Reels** platí pro všechny otevřené stránky Instagramu a zachová se i při dalším spuštění. Výchozí nastavení je zapnuto. Vypnutí obnoví skryté prvky v otevřené stránce. Zapnutí znovu zkontroluje i obsah načtený během vypnutí.
+QR kód otevři fotoaparátem iPhonu s nainstalovaným Expo Go. Obě zařízení mají být na stejné Wi-Fi. V Expo Go funguje **náhled obrazovek**, včetně nápovědy; ochrana je označená jako nedostupná a nejde zapnout. Expo Go nemůže obsahovat náš vlastní iOS modul ani vysílací rozšíření. Webový náhled spustíš `npm run web`.
 
-Rozšíření kontroluje adresu také při přechodech uvnitř webové aplikace. Na verzích Safari bez Navigation API probíhá záložní kontrola každých 400 ms v aktivní stránce. Videa ve skrytých kartách se pozastavují.
+## Sestavení skutečné ochrany pro iPhone
 
-## Ověření v Safari
+Potřebuješ Mac s Xcode, CocoaPods, připojený iPhone a **aktivní placené členství Apple Developer Program**. Bezplatný Personal Team nepodporuje Family Controls. Členství za tebe projekt neobjednává ani nehradí.
 
-- V navigaci by měl zmizet odkaz na Reels. Na profilu zkontroluj i záložku Reels.
-- Otevři v adresním řádku `https://www.instagram.com/reels/`. Safari by se mělo vrátit na úvod Instagramu.
-- Ověř v přihlášeném účtu, že lze otevřít běžný příspěvek, profil a zprávy.
-- V nabídce rozšíření vypni filtr. Skryté odkazy by se měly znovu objevit. Zapni ho a ověř, že znovu zmizí i ve druhé otevřené kartě Instagramu.
-- Vypni filtr, otevři stránku Reels a ověř, že zůstane dostupná. Po zapnutí by se měla vrátit na úvod Instagramu.
-- Instagram může měnit strukturu feedu. Když konkrétní karta zůstane viditelná, zaznamenej místo, kde se zobrazila, a verzi iOS pro další test.
+```sh
+# Vygeneruje iOS aplikaci, vysílací rozšíření a obrazovku blokace.
+npm run prebuild:guard
 
-[Pokyny Apple pro testování Safari rozšíření](https://developer.apple.com/documentation/safariservices/distributing-your-safari-web-extension)
+# Sestaví a nainstaluje vlastní vývojovou verzi na připojený iPhone.
+npm run ios:guard
 
-## Automatické testy
+# Při dalších úpravách TypeScriptu použij stejný vývojový klient:
+npm run start:dev
+```
 
-S nainstalovaným Node.js spusť `npm ci` a `npm test`. Testy používají simulovaný DOM a úložiště rozšíření. Ověřují skrývání, obnovu prvků, nastavení a přechody mezi adresami. Skutečnou podobu Instagramu a instalaci rozšíření je potřeba ověřit v Safari na iPhonu.
+Pokud je potřeba vlastní identifikátor, nastav `REELS_BUNDLE_ID` při **obou** prvních příkazech. Výchozí je `cz.numsik.reelsfiltr`. Identifikátory rozšíření i sdílená skupina se odvodí automaticky. Vygenerovaný projekt `ios/Reelsfiltr.xcworkspace` lze po instalaci CocoaPods otevřít v Xcode. Stejný placený tým musí být nastavený u aplikace i obou rozšíření. Pro distribuční sestavení/TestFlight je potřeba další schválení Family Controls od Apple pro všechny příslušné identifikátory.
+
+`npm run prebuild:ios` vygeneruje náhledovou verzi bez omezených oprávnění; tu lze podepsat Personal Teamem, ale ochrana v ní není dostupná. Přepnutí režimu prováděj přes tyto příkazy, které znovu vytvoří generovanou složku `ios/`. Ruční úpravy v této složce se při regeneraci ztratí; zdrojem nastavení je `app.config.ts` a plugin.
+
+`eas.json` obsahuje profily `preview`, `development` a `production`. Použití cloudového sestavení vyžaduje vlastní Expo účet a propojení projektu; účet ani cloudové sestavení nebyly v rámci této změny vytvářené.
+
+## Použití a ověření na telefonu
+
+1. V aplikaci povol Čas u obrazovky. Odmítnuté oprávnění nesmí zobrazovat aktivní ochranu.
+2. Vyber **pouze Instagram**, bez kategorií a webů. iOS aplikaci poskytuje anonymní token, proto její název nelze automaticky ověřit. Výběr jiné aplikace by blokoval ji.
+3. Zapni přepínač ochrany. Klepni na systémové tlačítko vysílání v kroku 3 a potvrď **Zahájit vysílání** pro Reels filtr. Mikrofon není potřeba.
+4. Vrať se do filtru a ověř stav **Ochrana běží**. Otevři původní Instagram. Ověř samostatně zprávy, fotopříspěvek a profil — nemají vyvolat blokaci.
+5. Otevři přehrávač Reels. Tři po sobě rozpoznané snímky mají vyvolat blokaci přibližně na 30 sekund. Po uvolnění je 8 sekund na odchod z Reels do zpráv či na profil.
+6. Vypni ochranu a ověř okamžité uvolnění Instagramu. Ukonči systémové vysílání a ověř, že filtr zobrazí neaktivní stav. Vyzkoušej také zamknutí a odemknutí telefonu a případné nové spuštění vysílání.
+
+Časování závisí na běhu vysílacího rozšíření. Když iOS rozšíření neočekávaně ukončí, blokace může zůstat aktivní do otevření Reels filtru; aplikace zkontroluje zastaralý stav a uvolní ji. Rozpoznávání může Reels přehlédnout nebo se splést; změny rozhraní Instagramu, jazyk, velikost textu a rozlišení ovlivňují výsledek. Rozšíření nezná identitu právě zobrazené aplikace a vyhodnocuje pouze podobu obrazovky. Před běžným používáním je nutné zařízení skutečně otestovat.
+
+## Soukromí
+
+Vysílací rozšíření zpracovává zhruba jeden snímek za 1,1 sekundy přes Apple Vision. Zvuk ignoruje. Snímky ani přečtený text neukládá a neodesílá. Sdílené místní úložiště obsahuje nastavení, anonymní výběr aplikace a časové údaje o běhu a blokaci. Hostitelská aplikace nečte účet, heslo ani zprávy Instagramu. Vývojový klient Expo používá síť pro načítání vývojového JavaScriptu.
+
+## Struktura
+
+- `App.tsx` — české rozhraní, nastavení, skutečný stav ochrany a nápověda.
+- `modules/reels-guard/` — lokální Expo modul: oprávnění, systémový výběr aplikace, ovládání a systémové tlačítko vysílání.
+- `modules/reels-guard/ios/Shared/` — sdílené nastavení a pravidla rozpoznávání.
+- `native/broadcast/` — ReplayKit + Vision, sledování běhu a vynucení blokace.
+- `native/shield/` — podoba blokovací obrazovky.
+- `plugins/withReelsGuard.cjs` — opakovatelné vytvoření iOS rozšíření a oprávnění při Expo prebuild.
+- `legacy/safari/` — zachovaná původní verze se Safari rozšířením. Nové Expo sestavení ji neobsahuje.
+
+## Kontroly
+
+```sh
+npm run typecheck
+npm test
+npm run test:native
+npx expo export --platform web
+```
+
+Swift testy ověřují pravidla a požadavek na opakované rozpoznání na syntetických textových oblastech. **Neprokazují přesnost na skutečných snímcích Instagramu.** JavaScriptové testy ověřují archivované Safari rozšíření. Pro skutečnou ochranu je nutné ověření na fyzickém iPhonu podle postupu výše.
+
+Při převodu prošla typová kontrola TypeScriptu, všech 15 testů původního rozšíření, 7 Swift testů detektoru, export JavaScriptu pro iOS i web a všech 20 kontrol Expo Doctor. Prošlo také celé sestavení pro zařízení v Xcode se zakázaným podepisováním, včetně nativního Expo modulu a obou rozšíření. Webové rozhraní bylo vizuálně ověřené v šířce 393 bodů. Podpis, instalace a rozpoznávání v Instagramu na fyzickém iPhonu zůstávají neověřené.
+
+## Dokumentace
+
+- [Expo: vlastní vývojová verze aplikace](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Expo: rozšíření iOS](https://docs.expo.dev/build-reference/app-extensions/)
+- [Apple: Family Controls](https://developer.apple.com/documentation/Xcode/configuring-family-controls)
+- [Apple: podporovaná oprávnění a typy členství](https://developer.apple.com/help/account/reference/supported-capabilities-ios)

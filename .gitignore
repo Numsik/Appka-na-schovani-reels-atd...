@@ -3,3 +3,9 @@ DerivedData/
 xcuserdata/
 *.xcuserstate
 node_modules/
+.expo/
+dist/
+/ios/
+/android/
+.env*.local
+.build/
