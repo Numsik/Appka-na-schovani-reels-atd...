@@ -16,7 +16,7 @@ npm start
 
 V přihlášení otevřeném příkazem `npx expo login` použij svůj Expo účet. Na iPhonu se v Expo Go přihlas **stejným účtem** přes ikonu účtu. Jde o přihlášení do Expa, ne do Apple účtu ani Instagramu. Samotné přihlášení na webu Expo nestačí, pokud se nedokončí propojení s příkazovým řádkem. Stav na Macu ověříš příkazem `npx expo whoami`. Tuto podmínku má aktuální Expo Go na fyzickém iPhonu; viz [pokyny Expa k přihlášení](https://docs.expo.dev/troubleshooting/expo-go-sign-in-required/).
 
-QR kód běžícího serveru otevři fotoaparátem iPhonu s nainstalovaným Expo Go. Obě zařízení mají být na stejné Wi-Fi. QR kód na webu v kroku „Download Expo Go“ instaluje Expo Go; pro náš projekt použij QR kód z běžícího serveru. V Expo Go funguje **náhled obrazovek**, včetně nápovědy; ochrana je označená jako nedostupná a nejde zapnout. Expo Go nemůže obsahovat náš vlastní iOS modul ani vysílací rozšíření. Webový náhled spustíš `npm run web`.
+QR kód běžícího serveru otevři fotoaparátem iPhonu s nainstalovaným Expo Go. Obě zařízení mají být na stejné Wi-Fi. QR kód na webu v kroku „Download Expo Go“ instaluje Expo Go; pro náš projekt použij QR kód z běžícího serveru. V Expo Go funguje **náhled obrazovek**, včetně nápovědy. V tomto režimu není přepínač, nastavování ochrany ani tlačítko pro otevření Instagramu: náhled do Instagramu nijak nezasahuje. Obrazovka vysvětluje požadavek na samostatnou instalaci. Expo Go nemůže obsahovat náš vlastní iOS modul ani vysílací rozšíření. Webový náhled spustíš `npm run web`.
 
 ## Sestavení skutečné ochrany pro iPhone
 

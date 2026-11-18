@@ -40,7 +40,7 @@ function AppScreen() {
   const selected = state.selectedAppCount === 1;
   const active = state.available && authorized && selected && state.enabled && state.broadcasting;
   const blocked = active && state.blockedUntil > now;
-  const status = !state.available ? 'NÁHLED APLIKACE' : blocked ? 'REELS MAJÍ PAUZU'
+  const status = !state.available ? 'NÁHLED · OCHRANA NEBĚŽÍ' : blocked ? 'REELS MAJÍ PAUZU'
     : active ? 'OCHRANA BĚŽÍ' : state.enabled ? 'ČEKÁ NA VYSÍLÁNÍ' : 'OCHRANA JE VYPNUTÁ';
 
   async function openInstagram() {
@@ -68,29 +68,35 @@ function AppScreen() {
         <Text style={styles.eyebrow}>{status}</Text>
       </View>
       <Text style={styles.title}>Méně scrollu.{ '\n' }Více prostoru.</Text>
-      <Text style={styles.intro}>Zůstaň v kontaktu. Nekonečný proud Reels{ '\n' }nech na chvíli stát.</Text>
+      <Text style={styles.intro}>{state.available
+        ? 'Zůstaň v kontaktu. Nekonečný proud Reels nech na chvíli stát.'
+        : 'Prohlížíš si rozhraní aplikace. Ochrana před Reels v tomto náhledu nefunguje.'}</Text>
+
+      {!state.available && <View style={styles.preview}>
+        <Ionicons name="information-circle-outline" size={23} color={colors.amber} />
+        <View style={{ flex: 1 }}><Text style={styles.previewTitle}>V náhledu ochranu nezapneš</Text>
+          <Text style={styles.caption}>K zapnutí je potřeba nainstalovat samostatnou verzi pro iPhone. Expo Go potřebná rozšíření neobsahuje.</Text></View>
+      </View>}
 
       <View style={styles.hero}>
         <View style={styles.heroTop}>
           <View style={styles.instagramIcon}><Ionicons name="logo-instagram" size={28} color={colors.text} /></View>
-          <View style={{ flex: 1 }}><Text style={styles.cardTitle}>Instagram</Text><Text style={styles.caption}>Tvoje aplikace. Víc klidu.</Text></View>
-          <Switch accessibilityLabel="Zapnout ochranu před Reels" value={state.enabled}
-            disabled={!state.available || busy !== null || (!state.enabled && (!authorized || !selected))}
+          <View style={{ flex: 1 }}><Text style={styles.cardTitle}>Instagram</Text><Text style={styles.caption}>{state.available ? 'Tvoje aplikace. Víc klidu.' : 'Připravovaný režim ochrany'}</Text></View>
+          {state.available ? <Switch accessibilityLabel="Zapnout ochranu před Reels" value={state.enabled}
+            disabled={busy !== null || (!state.enabled && (!authorized || !selected))}
             onValueChange={value => perform('toggle', () => setGuardEnabled(value))}
             trackColor={{ false: '#435047', true: colors.green }} thumbColor={colors.text} />
+            : <Text style={styles.previewBadge}>NÁHLED</Text>}
         </View>
         <View style={styles.divider} />
-        <View style={styles.feature}><Ionicons name="chatbubbles-outline" size={17} color={colors.green} /><Text style={styles.featureText}>Zprávy, fotky a profil zůstávají v Instagramu</Text></View>
+        <View style={styles.feature}><Ionicons name="chatbubbles-outline" size={17} color={colors.green} /><Text style={styles.featureText}>Zprávy jsou dostupné mimo dobu pauzy</Text></View>
         <View style={styles.feature}><Ionicons name="pause-circle-outline" size={17} color={colors.green} /><Text style={styles.featureText}>Rozpoznané Reels spustí 30 sekund pauzy</Text></View>
-        <View style={styles.note}><Text style={styles.noteText}>Záložka Reels zůstane viditelná. Při rozpoznání se dočasně zablokuje celý Instagram včetně zpráv.</Text></View>
+        <View style={styles.note}><Text style={styles.noteText}>{state.available
+          ? 'Záložka Reels zůstane viditelná. Při rozpoznání se na 30 sekund zablokuje celý Instagram včetně zpráv.'
+          : 'Samostatná verze má při rozpoznání Reels pozastavit na 30 sekund celý Instagram včetně zpráv. Rozpoznávání zatím není ověřené na telefonu.'}</Text></View>
       </View>
 
-      {!state.available && <View style={styles.preview}>
-        <Ionicons name="information-circle-outline" size={21} color={colors.amber} />
-        <View style={{ flex: 1 }}><Text style={styles.previewTitle}>Teď si prohlížíš náhled</Text>
-          <Text style={styles.caption}>Skutečná ochrana potřebuje plnou verzi pro iPhone. V tomto náhledu Instagram neblokujeme.</Text></View>
-      </View>}
-
+      {state.available && <>
       <View style={styles.sectionHeader}><Text style={styles.sectionTitle}>Připrav si ochranu</Text><Text style={styles.small}>{[authorized, selected, state.broadcasting].filter(Boolean).length} / 3</Text></View>
       <View style={styles.steps}>
         <Step index={1} title="Povol Čas u obrazovky" subtitle={state.authorization === 'denied' ? 'Přístup je zamítnutý. Povol ho v Nastavení.' : 'Dovol filtru krátce pozastavit Instagram.'}
@@ -110,24 +116,28 @@ function AppScreen() {
             : <Ionicons name="radio-outline" size={25} color={colors.muted} style={{ margin: 12, opacity: 0.4 }} />}
         </View>
       </View>
+      </>}
 
       {blocked && <View style={styles.feedback}><Text style={styles.previewTitle}>Právě běží krátká pauza</Text><Text style={styles.caption}>Instagram bude dostupný přibližně za {Math.ceil((state.blockedUntil - now) / 1000)} s.</Text></View>}
       {state.available && state.enabled && !state.broadcasting && <Text style={styles.warning}>Ochrana zatím neběží. Spusť vysílání obrazovky v kroku 3.</Text>}
       {message && <Text accessibilityRole="alert" style={styles.warning}>{message}</Text>}
 
-      <Pressable accessibilityRole="button" style={({ pressed }) => [styles.primaryButton, pressed && { opacity: 0.8 }]} onPress={openInstagram}>
-        <Text style={styles.primaryText}>Otevřít Instagram</Text><Ionicons name="arrow-forward" size={20} color={colors.bg} />
+      <Pressable accessibilityRole="button" style={({ pressed }) => [styles.primaryButton, pressed && { opacity: 0.8 }]} onPress={state.available ? openInstagram : () => setHelp(true)}>
+        <Text style={styles.primaryText}>{state.available ? 'Otevřít Instagram' : 'Co je potřeba k zapnutí'}</Text><Ionicons name="arrow-forward" size={20} color={colors.bg} />
       </Pressable>
-      <View style={styles.privacy}><Ionicons name="lock-closed-outline" size={13} color={colors.muted} /><Text style={styles.small}>Obraz se zpracovává v telefonu. Nikam se neodesílá.</Text></View>
-      <Text style={styles.beta}>Zkušební rozpoznávání · může se splést nebo Reels přehlédnout.</Text>
+      {state.available ? <>
+        <View style={styles.privacy}><Ionicons name="lock-closed-outline" size={13} color={colors.muted} /><Text style={styles.small}>Obraz se zpracovává v telefonu. Nikam se neodesílá.</Text></View>
+        <Text style={styles.beta}>Zkušební rozpoznávání · může se splést nebo Reels přehlédnout.</Text>
+      </> : <Text style={styles.beta}>V náhledu se obrazovka nesnímá a Instagram se neblokuje.</Text>}
     </ScrollView>
 
     <Modal visible={help} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setHelp(false)}>
       <SafeAreaView style={[styles.safe, { padding: 26 }]}>
         <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-        <Text style={[styles.title, { fontSize: 30 }]}>Jak to funguje</Text>
+        <Text style={[styles.title, { fontSize: 30 }]}>{state.available ? 'Jak to funguje' : 'Zapnutí ochrany'}</Text>
+        {!state.available && <Text style={[styles.helpText, { color: colors.amber }]}>Expo Go zobrazuje pouze rozhraní. Pro skutečnou ochranu je potřeba samostatná instalace aplikace s oprávněním Čas u obrazovky a vysílacím rozšířením. Vypínač se objeví až ve verzi, která tato rozšíření obsahuje.</Text>}
         <Text style={styles.helpText}>Telefon při zapnutém vysílání hledá na obrazovce znaky přehrávače Reels. Když je rozpozná opakovaně, na 30 sekund překryje vybranou aplikaci blokací.</Text>
-        <Text style={styles.helpText}>Po pauze máš 8 sekund na přechod do zpráv nebo na profil. Instagram zůstává původní aplikací z App Storu.</Text>
+        <Text style={styles.helpText}>Během pauzy jsou nedostupné také zprávy. Po pauze máš 8 sekund na přechod do zpráv nebo na profil. Instagram zůstává původní aplikací z App Storu.</Text>
         <Text style={styles.helpText}>Text obrazovky se zpracovává pouze v paměti telefonu. Snímky ani přečtený text se neukládají a nikam neodesílají. Vysílání ukončíš červeným indikátorem systému; tím se ukončí i ochrana.</Text>
         <Text style={styles.helpText}>Rozpoznávání je experimentální. Ochrana při zamknutí telefonu může skončit; po odemčení ověř stav a případně vysílání spusť znovu.</Text>
         <Pressable accessibilityRole="button" onPress={() => setHelp(false)} style={styles.primaryButton}><Text style={styles.primaryText}>Rozumím</Text></Pressable>
@@ -181,7 +191,8 @@ const styles = StyleSheet.create({
   featureText: { color: colors.text, fontSize: 12, flex: 1, lineHeight: 18 },
   note: { padding: 12, borderRadius: 12, backgroundColor: '#111B15', marginTop: 2 },
   noteText: { color: colors.muted, fontSize: 11, lineHeight: 17 },
-  preview: { flexDirection: 'row', gap: 10, paddingVertical: 17, alignItems: 'flex-start' },
+  preview: { flexDirection: 'row', gap: 10, padding: 17, alignItems: 'flex-start', backgroundColor: '#262116', borderColor: '#51472D', borderWidth: 1, borderRadius: 18, marginBottom: 20 },
+  previewBadge: { color: colors.amber, fontSize: 9, fontWeight: '700', letterSpacing: 1, borderColor: '#51472D', borderWidth: 1, padding: 7, borderRadius: 8 },
   previewTitle: { color: colors.text, fontSize: 13, fontWeight: '600', marginBottom: 4 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 24, marginBottom: 16 },
   sectionTitle: { color: colors.text, fontSize: 16, fontWeight: '600' },
